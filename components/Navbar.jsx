@@ -1,24 +1,17 @@
 'use client'
 import Link from "next/link"
 import { MdShoppingCart } from "react-icons/md"
-
+import { useCart } from '@/components/CartContext'
 
 
 export default function Navbar({
-    setKeranjang,
-    totalHarga,
-    keranjangCount,
-    setKeranjangOpen,
-    keranjang = [],      
-    keranjangOpen,
-    setKataKunci,
-    kategoriAktif,
-    setKategoriAktif,
-    setIsOpenMenu,
-    isOpenMenu,
-}) {
+
+})
+ {
+
+    const {tambahKeranjang, totalHarga, setKeranjang, setKeranjangOpen, kategoriAktif, isOpenMenu, keranjangCount, setKategoriAktif, setKataKunci, setIsOpenMenu} = useCart()
     return(
-        <div className="min-h-auto flex justify-between items-center p-2 bg-slate-900  border-b border-slate-700 sticky top-0 z-40 ">
+        <div className="min-h-auto flex flex-col justify-between items-center p-2 bg-slate-900  border-b border-slate-700 sticky top-0 z-40 md:flex-row gap-2">
             <Link href="/" >
                 <h1 className="text-[10px]w md:text-xl font-bold text-amber-400 cursor-pointer">
                     Bannur E-Commerce       

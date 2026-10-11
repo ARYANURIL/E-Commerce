@@ -8,9 +8,19 @@
     import { FaShoppingCart } from 'react-icons/fa'
     import { Truck, ShieldCheck } from 'lucide-react';
     import { GiD10 } from 'react-icons/gi';
+    import { Inter } from 'next/font/google'
+    import { useCart } from '@/components/CartContext';
+    import { useRouter } from 'next/navigation';    
+
+    const intermie = Inter ({
+        subsets : ['latin'],
+        variable : '--font-intermie'
+    })
+
+   
     
     const elektronik = [
-        {id:101, nama: "Redmi Note 13 5G", harga: 1500000, gambar: "/assets.image/redmi note 13 5g.jpg", kategori: "elektronik", deskripsi: "Smartphone 5G dengan layar jernih dan performa andal untuk aktivitas harian dan hp ini juga di gunakan oleh bannur", tentangProduk: "Redmi Note 13 5G cocok untuk aktivitas harian dengan konektivitas 5G, layar jernih, dan performa andal.", spesifikasiProduk: ["Konektivitas 5G", "Layar jernih", "Performa andal"], warna:[{namaWarna:"Warna Biru", classBg:"bg-blue-500"}, {namaWarna:"Warna Hitam", classBg:"bg-slate-700"}]},
+        {id:101, nama: "Redmi Note 13 5G", harga: 1500000, gambar: "/assets.image/redmi note 13 5g.jpg", kategori: "elektronik", deskripsi: "Smartphone 5G dengan layar jernih dan performa andal untuk aktivitas harian dan hp ini juga di gunakan oleh bannur", tentangProduk: "Redmi Note 13 5G cocok untuk aktivitas harian dengan konektivitas 5G, layar jernih, dan performa andal.", spesifikasiProduk: ["Konektivitas 5G", "Layar jernih", "Performa andal"], warna:[{namaWarna:"Warna Putih", classBg:"bg-white"}, {namaWarna:"Warna Hitam", classBg:"bg-slate-700"}]},
         {id:102, nama: "Samsung J2 Prime", harga: 500000, gambar: "/assets.image/samsung j2 prime.jpg", kategori: "elektronik", deskripsi: "Smartphone praktis dengan harga terjangkau untuk komunikasi dan kebutuhan dasar.", tentangProduk: "Samsung J2 Prime merupakan smartphone praktis dan terjangkau untuk komunikasi serta kebutuhan dasar.", spesifikasiProduk: ["Smartphone", "Untuk komunikasi", "Untuk kebutuhan dasar"]},
         {id:103, nama: "iPhone 15", harga: 12000000, gambar: "/assets.image/iphone 15.jpg", kategori: "elektronik", deskripsi: "iPhone dengan performa cepat, kamera berkualitas, dan desain modern.", tentangProduk: "iPhone 15 menggabungkan performa cepat, kamera berkualitas, dan desain modern.", spesifikasiProduk: ["Performa cepat", "Kamera berkualitas", "Desain modern"]},
         {id:104, nama: "iPhone 15 Pro", harga: 18000000, gambar: "/assets.image/iphone 15 pro.jpg", kategori: "elektronik", deskripsi: "iPhone kelas profesional dengan performa tinggi dan sistem kamera canggih.", tentangProduk: "iPhone 15 Pro dirancang untuk penggunaan profesional dengan performa tinggi dan kamera canggih.", spesifikasiProduk: ["Kelas profesional", "Performa tinggi", "Sistem kamera canggih"]},
@@ -70,6 +80,7 @@
 
     
     export default  function DetailProdukPage({ params, }) {
+        const router = useRouter();
         const [tabAktif, setTabAktif] = useState('deskripsi')
         const parameterTerbuka = React.use(params); 
         const idProdukSaatIni = parameterTerbuka.id
@@ -101,10 +112,10 @@
             return cocokKategori && cocokNama;
         })
 
-        const [keranjang, setKeranjang] = useState([])
-        const [keranjangOpen, setKeranjangOpen] = useState(false)
+        // const [keranjang, setKeranjang] = useState([])
+        // const [keranjangOpen, setKeranjangOpen] = useState(false)
 
-
+        // const totalHarga = keranjang.reduce((total, item) => total + item.harga, 0)
 
         const produk = semuaProduk.find((item) => String(item.id) === String(id));
 
@@ -116,13 +127,13 @@
                 </div>
             )
         }    
-
+            const {tambahKeranjang, keranjang, totalHarga, setKeranjang, setKeranjangOpen, keranjangOpen, hapusItem} = useCart()
         return (
            <div className='min-h-screen bg-slate-900 text-white p-6'>
 
-            <nav className='flex items-center justify-between gap-4 bg-slate-800/80 p-4 rounded-xl mb-8 relative'>
-                <h1 className='text-xl font-bold text-amber-400 '>Bannur E-Commerece</h1>
-                <div className='relative flex-1 max-w-md'>
+            <nav className='flex items-center justify-between gap-4 bg-slate-800/80 p-4 rounded-xl mb-8 relative '>
+                <h1 className='text-sm font-bold text-amber-400 md:text-lg'>Bannur E-Commerece</h1>
+                <div className='hidden md:block relative flex-1 max-w-md '>
                     <input 
                         type='text'
                         placeholder='Cari Barang....'
@@ -130,11 +141,25 @@
                         onChange={(e) => setTextPencarian(e.target.value)}
                         onFocus={() => setSedangKetik(true)}
                         onBlur={() => setTimeout(() => setSedangKetik(false), 200)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault()
+
+                                const barangDiTemukan = hasilRekomendasi[0] || semuaProduk.find(
+                                    (b) => b.nama.toLowerCase().includes(textPencarian.toLowerCase())
+                                );
+
+                                if (barangDiTemukan) {
+                                    router.push(`/produk/${barangDiTemukan.id}`)
+                                }
+                            }
+                        }}
                         className='w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-indigo-500'
                     />
 
                     {sedangketik && (
                         <div className='absolute top-full left-0 right-0 mt-2 bg-slate-800 border border-slate-700 roundede-xl shadow-2xl z-50 p-2 max-h-64 overflow-y-auto'>
+                            {/* onMouseDown={(e) => e.preventDefault()} */}
                             <div className='text-xs font-semibold text-slate-400 px-3 py-1 mb-1 border-b border-slate-700 '>
                                 Rekomendasi ({kategoriAktif.toUpperCase()}) 
                             </div>
@@ -159,7 +184,7 @@
                         </div>
                     )}
                 </div>
-                <div className='flex bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs'>
+                <div className='flex bg-slate-900 p-1 rounded-lg border border-slate-700 text-xs hidden md:block'>
                     {['semua', 'elektronik', 'makanan'].map((pilihan) =>(
                         <button 
                             key={pilihan}
@@ -175,10 +200,50 @@
                     ))}
                 </div>
                 {/* bagian keranjang masih perlu di perbaiki lagi agar nilainya bisa di tampung oleh variabel */}
-                <div className='bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm flex items-center gap-2'>
-                    🛒 keranjang: 0
-                </div>
+                <button onClick={() => setKeranjangOpen(true)} className='cursor-pointer bg-amber-500 font-bold px-4 py-2 rounded-lg text-sm flex items-center gap-2'>
+                    <FaShoppingCart className='w-3 h-3 text-white'/>
+                    <span className='text-xs text-white font-sans antialiased'>Keranjang : {keranjang.length}</span>
+                </button>
             </nav>
+
+            {keranjangOpen && (
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+                    <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl p-6 shadow-2xl flex flex-col max-h-[80vh]">
+                        <div className="flex justify-between items-center border-b border-slate-700 pb-4 mb-4 gap-2">
+                            <div className="w-full flex flex-col gap-2 justify-between items-center md:flex-row">
+                                <h2 className="text-lg font-bold text-amber-400">🛍️ Isi Keranjang Belanja</h2>
+                                <div className="w-auto items-center flex bg-slate-800 px-1 py-2 rounded-xl border border-slate-700 gap-1 md:flex-row justify-center gap-2">
+                                    <span className="text-base">Total Pesaan :</span>
+                                    <span className="text-emerald-500 text-base font-normal sm:font-normal">{totalHarga.toLocaleString('id-ID')}</span>
+                                </div>
+                            </div>
+                            <button onClick={() => setKeranjangOpen(false)} className="text-slate-400 hover:text-white font-bold text-xl px-2">✕</button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+                            {keranjang.length > 0 ? (
+                                keranjang.map((item, index ) => (
+                                    <div key={index} className="flex justify-between items-center bg-slate-900 p-3 rounded-xl border border-slate-700">
+
+                                        <div className="flex items-center gap-3"></div>
+                                        <div className="flex flex-col justify-center items-center">
+                                            <h4 className="font-semibold text-white">{item.nama}</h4>
+                                            <p className="text-xs text-emerald-400">Rp {item.harga.toLocaleString('id-ID')}</p>
+                                        </div>
+                                        <button onClick={() => hapusItem(index)} className="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white text-xs px-3 py-1.5 rounded-lg transition">
+                                            Cek Out
+                                        </button>
+                                    </div>
+                                    
+                                ))   
+                            ) : (
+                                <p className="text-center text-slate-400 py-8 ">your keranjang masih empty</p>
+                            )}
+                        </div>  
+
+                    </div>
+                </div>
+            )}
             
             <div className='max-w-4xl mx-auto bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6'>
                     <Link href="/" className='inline-block bg-slate-800 border border-slate-700 text-sm px-4 py-2 rounded-xl text-slate-300 hover:text-white mb-6'>

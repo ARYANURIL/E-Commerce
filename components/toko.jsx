@@ -6,6 +6,7 @@ import { lazy, useState } from "react";
 import { FaShoppingCart } from 'react-icons/fa'
 import Navbar from './Navbar'
 import { Menu, X, ShoppingCart, Home, Package } from 'lucide-react';
+import { useCart } from '../components/CartContext'
 
 export default function Toko() {
     // const [dataProduk] = useState([
@@ -15,7 +16,7 @@ export default function Toko() {
     //     {id: 104, nama: "Smart Watch", harga: 299000, gambar: "⌚"}
     // ])  
 
-    const [isOpenMenu, setIsOpenMenu] = useState(false)
+
 
     const elektronik = [
         {id:101, nama: "Redmi Note 13 5G", harga: 1500000, gambar: "/assets.image/redmi note 13 5g.jpg", kategori: "elektronik"},
@@ -77,52 +78,37 @@ export default function Toko() {
 
     
 
-    const [kategoriAktif, setKategoriAktif] = useState("semua")
-    const  [nilai, setNilai] = useState(0)
-    const [keranjang, setKeranjang] = useState([])
-    const [kataKunci, setKataKunci] = useState("")
-    const [keranjangOpen, setKeranjangOpen] = useState(false)
-
-    const dataTergantungKategoriBalekDaek = 
-        kategoriAktif === "elektronik" ? elektronik :
-        kategoriAktif === "makanan" ? makanan :
-        [...elektronik, ...makanan]
-
-    const produkTersaring = dataTergantungKategoriBalekDaek.filter((produk) =>
-        produk.nama.toLowerCase().includes(kataKunci.toLowerCase())
-    )    
 
 
-    
-    const totalHarga = keranjang.reduce((total, item) => total + item.harga, 0)
 
-    const tambahKeKeranjang = (produkYangDiPilih) => {
-        try{
-            setKeranjang((prev) => [...prev, produkYangDiPilih])    
-        } catch (error) {
-            alert("gagal menambahkan barang ke keranjang")
-        }
-    }
 
-    const hapusItem = (indexHapus) => {
-        setKeranjang((prev) => prev.filter((_, index) => index !== indexHapus))
-    }
+
+    // const dataTergantungKategoriBalekDaek = 
+    //     kategoriAktif === "elektronik" ? elektronik :
+    //     kategoriAktif === "makanan" ? makanan :
+    //     [...elektronik, ...makanan]
+
+    // const produkTersaring = dataTergantungKategoriBalekDaek.filter((produk) =>
+    //     produk.nama.toLowerCase().includes(kataKunci.toLowerCase())
+    // )    
+
+    const {tambahKeranjang, keranjang, totalHarga, setKeranjang, setKeranjangOpen, keranjangOpen, kategoriAktif, setKategoriAktif, dataTergantungKategoriBalekDaek, produkTersaring, isOpenMenu, hapusItem, setIsOpenMenu} = useCart()
 
     return (
         <div className="p-8 w-full mx-auto bg-slate-900 text-white min-h-screen">
 
             <Navbar 
-                setKeranjang={setKeranjang}
-                totalHarga={totalHarga}
-                keranjangCount={keranjang.length}
-                setKeranjangOpen={setKeranjangOpen}
-                keranjangOpen={keranjangOpen}
-                keranjang={keranjang}
-                setKataKunci={setKataKunci}
-                kategoriAktif={kategoriAktif}
-                setKategoriAktif={setKategoriAktif}
-                setIsOpenMenu={setIsOpenMenu}
-                isOpenMenu={isOpenMenu}
+                // setKeranjang={setKeranjang}
+                // totalHarga={totalHarga}
+                // keranjangCount={keranjang.length}
+                // setKeranjangOpen={setKeranjangOpen}
+                // keranjangOpen={keranjangOpen}
+                // keranjang={keranjang}
+                // setKataKunci={setKataKunci}
+                // kategoriAktif={kategoriAktif}
+                // setKategoriAktif={setKategoriAktif}
+                // setIsOpenMenu={setIsOpenMenu}
+                // isOpenMenu={isOpenMenu}
             />
 
 
@@ -168,7 +154,7 @@ export default function Toko() {
                                         <button className="w-full bg-indigo-600 hover:bg-indogo-500 text-white py-1.5 rounded-lg font-bold text-sm transition cursor-pointer active:scale-95">Beli</button>
                                     </Link>
                                 </div>
-                                <button onClick={() => tambahKeKeranjang(produk)} className="w-auto p-5 bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-lg font-bold text-sm transition cursor-pointer active:scale-95"><FaShoppingCart /></button>
+                                <button onClick={() => tambahKeranjang(produk)} className="w-auto p-5 bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-lg font-bold text-sm transition cursor-pointer active:scale-95"><FaShoppingCart /></button>
                             </div>
                         </div>
                     ))
@@ -230,12 +216,11 @@ export default function Toko() {
                                 <span>Beranda</span>
                             </a>
                             <a 
-                            href="#"
-                            onClick={() => setIsOpenMenu(false)}
+                            onClick={() => setIsOpenMenu(false, alert("yakali jierr"))}
                             className="flex items-center gap-3 text-slate-300 hover:text-white bg-slate-800/50 p-3 rounded-xl hover:bg-slate-800 font-medium"
                             >
                                 <Package className="w-5 h-5 text-indigo-400"/>
-                                <span>No Telepon Dev</span>
+                                <span>Alamat Rumah Nuril</span>
                             </a>
                             <button 
                                 onClick={() => {
