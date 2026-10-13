@@ -9,7 +9,7 @@ export default function Navbar({
 })
  {
 
-    const {tambahKeranjang, totalHarga, setKeranjang, setKeranjangOpen, kategoriAktif, isOpenMenu, keranjangCount, setKategoriAktif, setKataKunci, setIsOpenMenu} = useCart()
+    const {tambahKeranjang, totalHarga, setKeranjang, setKeranjangOpen, kategoriAktif, isOpenMenu, keranjangCount, setKategoriAktif, setKataKunci, setIsOpenMenu, kataKunci} = useCart()
     return(
         <div className="min-h-auto flex flex-col justify-between items-center p-2 bg-slate-900  border-b border-slate-700 sticky top-0 z-40 md:flex-row gap-2">
             <Link href="/" >

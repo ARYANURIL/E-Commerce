@@ -19,7 +19,7 @@ export default function Toko() {
 
 
     const elektronik = [
-        {id:101, nama: "Redmi Note 13 5G", harga: 1500000, gambar: "/assets.image/redmi note 13 5g.jpg", kategori: "elektronik"},
+        {id:101, nama: "Redmi Note 13 5G", harga: 1500000, gambar: "/assets.image/redmi note 13 5g.jpg", kategori: "elektronik", label:"hp iki apik cah aku yo nggae hp iki joss"},
         {id:102, nama: "Samsung J2 Prime", harga: 500000, gambar: "/assets.image/samsung j2 prime.jpg", kategori: "elektronik",},
         {id:103, nama: "iPhone 15", harga: 12000000, gambar: "/assets.image/iphone 15.jpg", kategori: "elektronik"},
         {id:104, nama: "iPhone 15 Pro", harga: 18000000, gambar: "/assets.image/iphone 15 pro.jpg", kategori: "elektronik"},
@@ -92,8 +92,8 @@ export default function Toko() {
     //     produk.nama.toLowerCase().includes(kataKunci.toLowerCase())
     // )    
 
-    const {tambahKeranjang, keranjang, totalHarga, setKeranjang, setKeranjangOpen, keranjangOpen, kategoriAktif, setKategoriAktif, dataTergantungKategoriBalekDaek, produkTersaring, isOpenMenu, hapusItem, setIsOpenMenu} = useCart()
-
+    const {tambahKeranjang, keranjang, totalHarga, setKeranjang, setKeranjangOpen, keranjangOpen, kategoriAktif, setKategoriAktif, dataTergantungKategoriBalekDaek, produkTersaring, isOpenMenu, hapusItem, setIsOpenMenu, kataKunci, setKataKunci} = useCart()
+    
     return (
         <div className="p-8 w-full mx-auto bg-slate-900 text-white min-h-screen">
 
@@ -116,6 +116,8 @@ export default function Toko() {
             <div className="mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {produkTersaring.length > 0 ?(
 
+                    
+
                     produkTersaring.map((produk) => (
                         <div key={produk.id} className="bg-slate-800 border border-slate-700 rounded-xl p-4 flex flex-col justify-between">
                             <div className={`relative w-full h-48 overflow-hidden flex items-center justify-center rounded-lg ${
@@ -123,6 +125,7 @@ export default function Toko() {
                                 ? 'bg-slate-800 rounded-lg'
                                 : 'bg-white'
                             }`}>
+                                
                                 {produk.gambar ? (
                                     <Image
                                         priority
@@ -141,9 +144,11 @@ export default function Toko() {
                                     </span>
                                 )}
                             </div>
-                            <div>
-                                {/* <div className="text-4xl mb-2 text-center">{produk.gambar}</div> */}
+                            <div className="gap-1">
                                 <h3 className="font-bold text-lg font-bold">{produk.nama}</h3>
+                                {produk.nama === "Redmi Note 13 5G" && (
+                                    <p className="text-xs text-gray-400">hp iki apik cah aku yo nggae hp iki joss</p>
+                                )}
                                 <p className="text-emerald-400 font-semibold mb-4">
                                     Rp {produk.harga.toLocaleString('id-ID')}
                                 </p>
@@ -189,9 +194,9 @@ export default function Toko() {
                                             <h4 className="font-semibold text-white">{item.nama}</h4>
                                             <p className="text-xs text-emerald-400">Rp {item.harga.toLocaleString('id-ID')}</p>
                                         </div>
-                                        <button onClick={() => hapusItem(index)} className="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white text-xs px-3 py-1.5 rounded-lg transition">
+                                        <Link href='/checkout' className="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white text-xs px-3 py-1.5 rounded-lg transition">
                                             Cek Out
-                                        </button>
+                                        </Link>
                                     </div>
                                     
                                 ))   
@@ -209,7 +214,10 @@ export default function Toko() {
                         <div className="flex flex-col gap-2 ">
                             <a 
                             href="#"
-                            onClick={() => setIsOpenMenu(false)}
+                            onClick={() => {
+                                setIsOpenMenu(false)
+                                setKataKunci("")
+                            }}
                             className="flex items-center gap-3 text-slate-300 hover:text-white bg-slate-800/50 p-3 rounded-xl hover:bg-slate-800 font-medium"
                             >
                                 <Home className="w-5 h-5 text-indigo-400"/>

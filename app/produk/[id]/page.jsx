@@ -8,16 +8,16 @@
     import { FaShoppingCart } from 'react-icons/fa'
     import { Truck, ShieldCheck } from 'lucide-react';
     import { GiD10 } from 'react-icons/gi';
-    import { Inter } from 'next/font/google'
+    import { Inter, Just_Another_Hand } from 'next/font/google'
     import { useCart } from '@/components/CartContext';
     import { useRouter } from 'next/navigation';    
 
     const intermie = Inter ({
         subsets : ['latin'],
         variable : '--font-intermie'
-    })
-
+    }) 
    
+    
     
     const elektronik = [
         {id:101, nama: "Redmi Note 13 5G", harga: 1500000, gambar: "/assets.image/redmi note 13 5g.jpg", kategori: "elektronik", deskripsi: "Smartphone 5G dengan layar jernih dan performa andal untuk aktivitas harian dan hp ini juga di gunakan oleh bannur", tentangProduk: "Redmi Note 13 5G cocok untuk aktivitas harian dengan konektivitas 5G, layar jernih, dan performa andal.", spesifikasiProduk: ["Konektivitas 5G", "Layar jernih", "Performa andal"], warna:[{namaWarna:"Warna Putih", classBg:"bg-white"}, {namaWarna:"Warna Hitam", classBg:"bg-slate-700"}]},
@@ -51,7 +51,7 @@
         {id:129, nama: "Nubia RedMagic 9 Pro", harga: 13000000, gambar: "/assets.image/Nubia RedMagic 9 Pro.jpg", kategori: "elektronik", deskripsi: "Ponsel gaming bertenaga dengan kipas pendingin dan layar tanpa gangguan.", tentangProduk: "Nubia RedMagic 9 Pro menawarkan kipas pendingin dan layar tanpa gangguan untuk pengalaman gaming.", spesifikasiProduk: ["Ponsel gaming", "Kipas pendingin", "Layar tanpa gangguan"]},
         {id:130, nama: "Sony Xperia 1 V", harga: 18000000, gambar: "/assets.image/Sony Xperia 1 V.jpg", kategori: "elektronik", deskripsi: "Smartphone premium dengan layar sinematik dan kamera berfitur profesional.", tentangProduk: "Sony Xperia 1 V menghadirkan layar sinematik dan kamera dengan fitur profesional.", spesifikasiProduk: ["Smartphone premium", "Layar sinematik", "Kamera profesional"]},
     ]
-
+    
     const makanan = [
         {id: 201, nama: "Nasi Padang", harga: 20000, gambar: "/assets.image/makanan/nasi padang.jpg", kategori: "makanan", deskripsi: "Nasi putih hangat dengan pilihan lauk dan kuah khas masakan Padang."},
         {id: 202, nama: "Nasi Goreng", harga: 18000, gambar: "/assets.image/makanan/nasi goreng.jpg", kategori: "makanan", deskripsi: "Nasi goreng gurih dengan bumbu pilihan dan pelengkap yang menggugah selera."},
@@ -74,25 +74,30 @@
         {id: 219, nama: "Pisang Goreng", harga: 12000, gambar: "/assets.image/makanan/pisang goreng.jpg", kategori: "makanan", deskripsi: "Pisang manis berbalut adonan renyah, cocok sebagai camilan hangat."},
         {id: 220, nama: "Es Teh Manis", harga: 5000, gambar: "/assets.image/makanan/es teh manis.jpg", kategori: "makanan", deskripsi: "Teh manis dingin yang segar untuk menemani makanan atau diminum sendiri."}
     ]
-
     
-    const semuaProduk = [...elektronik, ...makanan]
-
+    const semuaProduk = [...elektronik, ...makanan];
     
+    const handleBeliSekarang = () => {
+   
+        localStorage.setItem('produkCheckout', JSON.stringify(semuaProduk))
+        router.push('/pembayaran')  
+        
+    }
     export default  function DetailProdukPage({ params, }) {
         const router = useRouter();
-        const [tabAktif, setTabAktif] = useState('deskripsi')
-        const parameterTerbuka = React.use(params); 
-        const idProdukSaatIni = parameterTerbuka.id
-
+        
+        
         const resolvedParams= use(params)
         const { id } = resolvedParams;
-
-        const SEMUA_PRODUK = [...elektronik, ...makanan]
-
-        const ProdukSaatIni = SEMUA_PRODUK.find(
+        const ProdukSaatIni = semuaProduk.find(
             (item) => String(item.id) === String(id)
         );
+        const idProdukSaatIni = id; 
+        const [tabAktif, setTabAktif] = useState('deskripsi')
+        const parameterTerbuka = React.use(params); 
+        
+
+
 
         const [textPencarian, setTextPencarian] = useState('')
         const [sedangketik, setSedangKetik] = useState(false)
@@ -104,7 +109,7 @@
             }
         }, [ProdukSaatIni])
 
-        const hasilRekomendasi = SEMUA_PRODUK.filter((barang) => {
+        const hasilRekomendasi = semuaProduk.filter((barang) => {
             const cocokKategori = kategoriAktif === 'semua' || barang.kategori === kategoriAktif;
 
             const cocokNama = barang.nama.toLowerCase().includes(textPencarian.toLowerCase());
@@ -230,7 +235,7 @@
                                             <h4 className="font-semibold text-white">{item.nama}</h4>
                                             <p className="text-xs text-emerald-400">Rp {item.harga.toLocaleString('id-ID')}</p>
                                         </div>
-                                        <button onClick={() => hapusItem(index)} className="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white text-xs px-3 py-1.5 rounded-lg transition">
+                                        <button onClick={() => router.push('/checkout')} className="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white text-xs px-3 py-1.5 rounded-lg transition">
                                             Cek Out
                                         </button>
                                     </div>
@@ -305,9 +310,19 @@
                                             </div>
                                     </div>
 
-                            <button className='w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl transition my-2'>
+                                <button
+                                onClick={() => {
+                                    localStorage.setItem(
+                                    'produkCheckout',
+                                    JSON.stringify(ProdukSaatIni)
+                                    );
+
+                                    router.push('/pembayaran');
+                                }}
+                                className="w-full bg-emerald-600 hover:bg-emerald-500 font-bold py-3 rounded-xl transition-all"
+                                >
                                 Beli Sekarang
-                            </button>
+                                </button>
                         </div>
 
                     </div>

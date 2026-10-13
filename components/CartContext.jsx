@@ -64,6 +64,8 @@ export default function CartProvider({ children }) {
         {id: 220, nama: "Es Teh Manis", harga: 5000, gambar: "/assets.image/makanan/es teh manis.jpg", kategori: "makanan"}
     ]
 
+    const semuaProduk = [...elektronik, ...makanan]
+
     const [kataKunci, setKataKunci] = useState("")
     const [isOpenMenu, setIsOpenMenu] = useState(false)
 
@@ -106,6 +108,7 @@ export default function CartProvider({ children }) {
             value = {{
                 setKataKunci,
                 setIsOpenMenu,
+                setKataKunci,
                 isOpenMenu,
                 produkTersaring,
                 keranjang,
@@ -119,7 +122,7 @@ export default function CartProvider({ children }) {
                 hapusItem,
                 totalHarga,
                 keranjangCount: keranjang.length,
-
+                semuaProduk,
             }}
         >
 
